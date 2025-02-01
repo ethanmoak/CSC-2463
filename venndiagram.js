@@ -1,10 +1,7 @@
-//function setup() {
-  //createCanvas(400, 400);
-  //background(255);  // Set background to white
-  function setup() {
-    let cnv = createCanvas(400, 400);
-    cnv.position(650, 650);  // Second canvas at (650, 0)
-    background(100);
+function setup() {
+  createCanvas(400, 400);
+  background(255);  // Set background to white
+
   
   noStroke();  // Disable the outline
   
