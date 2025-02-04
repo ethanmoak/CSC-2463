@@ -7,7 +7,7 @@ let paletteWidth = 40;
 let lastX, lastY;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(800, 800);
   background(255);
   drawPalette();
 }
@@ -23,7 +23,7 @@ function draw() {
   if (mouseIsPressed) {
     if (mouseX > paletteWidth) {
       stroke(currentColor);
-      strokeWeight(8);
+      strokeWeight(20);
       if (lastX !== undefined && lastY !== undefined) {
         line(lastX, lastY, mouseX, mouseY);
       }
