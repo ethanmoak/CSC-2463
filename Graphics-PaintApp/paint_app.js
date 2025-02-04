@@ -23,7 +23,7 @@ function draw() {
   if (mouseIsPressed) {
     if (mouseX > paletteWidth) {
       stroke(currentColor);
-      strokeWeight(20);
+      strokeWeight(50);
       if (lastX !== undefined && lastY !== undefined) {
         line(lastX, lastY, mouseX, mouseY);
       }
