@@ -1,42 +1,53 @@
-let vanhelsing
-let character;
+let vanhelsing, viking, jungleWarrior;
+let characters = [];
 
 function preload() {
-  vanhelsing =  loadImage("media/Van Helsing.png")
+  vanhelsing = loadImage("media/Van Helsing.png");
+  viking = loadImage("media/viking.png");
+  jungleWarrior = loadImage("media/jungle warrior.png");
 }
 
 function setup() {
   createCanvas(400, 400);
   imageMode(CENTER);
 
-
-  character = new Character(random(80, width-80),random(80, height-80));
-  character.addAnimation("right", new spriteanimation(vanhelsing,0,0,9));
-  character.addAnimation("left", new spriteanimation(vanhelsing,0,0, 9));
-  character.addAnimation("stand", new spriteanimation(vanhelsing,0,0,1));
-  character.currentAnimation = "stand";
+  // Create multiple character instances
+  characters.push(new Character(random(80, width - 80), random(80, height - 80), vanhelsing));
+  characters.push(new Character(random(80, width - 80), random(80, height - 80), viking));
+  characters.push(new Character(random(80, width - 80), random(80, height - 80), jungleWarrior));
 }
 
 function draw() {
   background(220);
 
-  character.draw();
+  for (let character of characters) {
+    character.draw();
+  }
 }
 
 function keyPressed() {
-  character.keyPressed();
+  for (let character of characters) {
+    character.keyPressed();
+  }
 }
 
-function keyReleased(){
-  character.keyReleased();
+function keyReleased() {
+  for (let character of characters) {
+    character.keyReleased();
+  }
 }
 
 class Character {
-  constructor(x, y) {
+  constructor(x, y, spriteSheet) {
     this.x = x;
     this.y = y;
-    this.currentAnimation = null
+    this.currentAnimation = "stand";
     this.animations = {};
+
+    // Adding animations (assuming same sprite layout for all)
+    this.addAnimation("right", new spriteanimation(spriteSheet, 0, 0, 9));
+    this.addAnimation("left", new spriteanimation(spriteSheet, 0, 0, 9));
+    this.addAnimation("stand", new spriteanimation(spriteSheet, 0, 0, 1));
   }
 
   addAnimation(key, animation) {
@@ -46,43 +57,33 @@ class Character {
   draw() {
     let animation = this.animations[this.currentAnimation];
     if (animation) {
-      switch (this.currentAnimation) {
-        case "right":
-          this.x += 2;
-          break;
-        case "left":
-          this.x -= 2;
-          break;
+      if (this.currentAnimation === "right") {
+        this.x += 2;
+      } else if (this.currentAnimation === "left") {
+        this.x -= 2;
       }
-        
+
       push();
       translate(this.x, this.y);
       animation.draw();
       pop();
     }
   }
-  
+
   keyPressed() {
-    switch(keyCode) {
-      case RIGHT_ARROW:
-        this.currentAnimation = "right";
-        
-        break;
-      case LEFT_ARROW:
-        this.currentAnimation = "left";
-        this.animations[this.currentAnimation].flipped = true;
-      
-        break;
+    if (keyCode === RIGHT_ARROW) {
+      this.currentAnimation = "right";
+    } else if (keyCode === LEFT_ARROW) {
+      this.currentAnimation = "left";
+      this.animations[this.currentAnimation].flipped = true;
     }
   }
-  
+
   keyReleased() {
     this.currentAnimation = "stand";
-    //this.animations[this.currentAnimation].flipped = true;
   }
-
-
 }
+
 class spriteanimation {
   constructor(spritesheet, startU, startV, duration) {
     this.spritesheet = spritesheet;
@@ -95,15 +96,13 @@ class spriteanimation {
   }
 
   draw() {
-    let s = (this.flipped) ? -1 : 1;
-    scale(s,1);
-    image(this.spritesheet, 0, 0, 80, 80, this.u*80, this.v*80, 80, 80);
+    let s = this.flipped ? -1 : 1;
+    scale(s, 1);
+    image(this.spritesheet, 0, 0, 80, 80, this.u * 80, this.v * 80, 80, 80);
 
     this.frameCount++;
-    if (this.frameCount % 5 == 0)
-      this.u++;
+    if (this.frameCount % 5 === 0) this.u++;
 
-    if (this.u == this.startU + this.duration) 
-      this.u = this.startU;
+    if (this.u === this.startU + this.duration) this.u = this.startU;
   }
 }
