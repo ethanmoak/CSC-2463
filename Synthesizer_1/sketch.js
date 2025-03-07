@@ -1,6 +1,9 @@
 let synth1, polySynth, noise1, ampEnv1, filt1, metalSynth, fmSynth, basicSynth;
-let lowPassFilter, rev;
+let lowPassFilter, rev, bitCrusher, pingPongDelay, ringMod;
 let activeKey = null;
+let bitCrusherSlider;
+let pingPongButton, ringModButton;
+let pingPongEnabled = false, ringModEnabled = false;
 
 let keyNotes = {
   'a': 'A4',
@@ -18,14 +21,18 @@ let keyNotes1 = {
 function setup() {
   createCanvas(500, 400);
   
-  // Filter and Reverb as Sound Processors
+  // Effects
   lowPassFilter = new Tone.Filter(800, "lowpass").toDestination();
   rev = new Tone.Reverb(2).toDestination();
+  bitCrusher = new Tone.BitCrusher(4).toDestination();
+  pingPongDelay = new Tone.PingPongDelay("4n", 0.4).toDestination();
+  ringMod = new Tone.FrequencyShifter(50).toDestination();
 
+  
   // Monophonic Synth
   synth1 = new Tone.Synth({
     envelope: { attack: 0.1, decay: 0.2, sustain: 0.9, release: 0.3 }
-  }).connect(rev);
+  }).connect(rev).connect(bitCrusher);
 
   // Polyphonic Synth
   polySynth = new Tone.PolySynth(Tone.Synth).connect(rev);
@@ -59,11 +66,42 @@ function setup() {
     oscillator: { type: 'sine' }
   }).toDestination();
 
-  // Button for Interactive Synth Play
+  // UI Controls
   let synthButton = createButton("Play A#3");
   synthButton.position(50, 350);
   synthButton.mousePressed(() => {
     basicSynth.triggerAttackRelease("A#3", 2);
+  });
+
+  // BitCrusher Slider
+  bitCrusherSlider = createSlider(1, 8, 4, 1);
+  bitCrusherSlider.position(50, 300);
+  bitCrusherSlider.input(() => {
+    bitCrusher.bits = bitCrusherSlider.value();
+  });
+  
+  // Ping-Pong Delay Toggle
+  pingPongButton = createButton("Toggle Delay");
+  pingPongButton.position(180, 300);
+  pingPongButton.mousePressed(() => {
+    pingPongEnabled = !pingPongEnabled;
+    if (pingPongEnabled) {
+      synth1.connect(pingPongDelay);
+    } else {
+      synth1.disconnect(pingPongDelay);
+    }
+  });
+  
+  // Ring Modulator Toggle
+  ringModButton = createButton("Toggle Ring Mod");
+  ringModButton.position(280, 300);
+  ringModButton.mousePressed(() => {
+    ringModEnabled = !ringModEnabled;
+    if (ringModEnabled) {
+      synth1.connect(ringMod);
+    } else {
+      synth1.disconnect(ringMod);
+    }
   });
 }
 
@@ -76,6 +114,7 @@ function draw() {
   text("z: Noise Generator", 20, 80);
   text("x: Metal Synth", 20, 100);
   text("c: FM Synth", 20, 120);
+  text("BitCrusher Depth: " + bitCrusher.bits, 50, 290);
 }
 
 function keyPressed() {
@@ -109,4 +148,3 @@ function keyReleased() {
     fmSynth.triggerRelease();
   }
 }
-
