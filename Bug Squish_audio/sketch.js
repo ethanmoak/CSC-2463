@@ -177,8 +177,9 @@ function draw() {
   }
 }
 
-function keyPressed() {
-  Tone.start();
+async function keyPressed() {
+  await Tone.start();
+  
 
   if (keyCode = 13) {
     if (gameState === GameStates.START || gameState === GameStates.END) {
@@ -200,8 +201,8 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
-  Tone.start();
+async function mousePressed() {
+  await Tone.start();
 
   let hitBug = false;
   if (gameState === GameStates.PLAY) {
