@@ -23,10 +23,10 @@ function preload() {
   bugSprites = loadImage("media/New Piskel.png");
 
   sounds = new Tone.Players({
-    bugSquish: "media/bugsquish.mp3",
-    gameStart: "media/gamestartclick.mp3",
-    missedBug: "media/missedbug.mp3",
-    bugsMoving: "media/bugsmoving.mp3"
+    bugSquish: "https://ethanmoak.github.io/CSC-2463/Bug%20Squish_audio/media/bugsquish.mp3",
+    gameStart: "https://ethanmoak.github.io/CSC-2463/Bug%20Squish_audio/media/gamestartclick.mp3",
+    missedBug: "https://ethanmoak.github.io/CSC-2463/Bug%20Squish_audio/media/missedbug.mp3",
+    bugsMoving: "https://ethanmoak.github.io/CSC-2463/Bug%20Squish_audio/media/bugsmoving.mp3"
   }).toDestination();
 }
 
